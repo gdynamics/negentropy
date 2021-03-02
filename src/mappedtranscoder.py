@@ -4,7 +4,7 @@ from abc import abstractmethod
 class MappedTranscoder(Transcoder):
     @property
     @abstractmethod
-    def mapping():
+    def mapping(self):
         pass
 
     @abstractmethod
