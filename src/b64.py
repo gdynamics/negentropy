@@ -22,13 +22,55 @@ class B64(MappedTranscoder):
     }
 
     def encode(plaintxt: str) -> str:
-        print(plaintxt, "->", '?')
-        return "encode"
+        ciphertxt = ""
+        plainint = [ord(x) for x in plaintxt]
+        leng = len(plainint)
+
+        for i in range(0, len(plainint), 3):
+            padded = False
+            
+            # First
+            first = (plainint[i] & 0xFD) >> 2
+            first = B64.mapping[first]
+
+            # Second
+            carry = (plainint[i] & 0x03) << 4
+            if i+1 > leng-1:
+                padded = True
+                second = carry
+            else:
+                second = carry | ((plainint[i+1] & 0xF0) >> 4)
+            second = B64.mapping[second]
+
+            # Third
+            if padded:
+                third = "="
+            else:
+                carry = (plainint[i+1] & 0x0F) << 2
+                if i+2 > leng-1:
+                    padded = True
+                    third = carry
+                else:
+                    third = carry | ((plainint[i+2] & 0xC0) >> 6)
+                third = B64.mapping[third]
+
+            # Fourth
+            if padded:
+                fourth = "="
+            else:
+                fourth = plainint[i+2] & 0x3F
+                fourth = B64.mapping[fourth]
+
+            ciphertxt = ciphertxt + first + second + third + fourth 
+
+        return ciphertxt
 
     def decode(ciphertxt: str) -> str:
-        print(ciphertxt, "->", '?')
+        reverse_mapping = {v: k for k, v in B64.mapping.items()} 
         return "decode"
 
-
 if __name__ == "__main__":
-    B64.encode("wow")
+    print(B64.encode("Man"))
+    print(B64.encode("Ma"))
+    print(B64.encode("M"))
+    print(B64.encode("""Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."""))
