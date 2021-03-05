@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from mappedtranscoder import MappedTranscoder
+import base64 # Just for testing
 
 class B64(MappedTranscoder):
     mapping = {
@@ -69,8 +70,37 @@ class B64(MappedTranscoder):
         reverse_mapping = {v: k for k, v in B64.mapping.items()} 
         return "decode"
 
+def test_encode(plaintxt: str) -> str:
+    mismatch_found = False
+    my_encode = B64.encode(plaintxt).upper()
+    ext_encode = base64.b64encode(plaintxt.encode()).decode().upper()
+    while(len(my_encode) != len(ext_encode)):
+        if len(my_encode) > len(ext_encode):
+            ext_encode = ext_encode + '?'
+        else:
+            my_encode = my_encode + '?'
+
+    for i in range(0, len(my_encode), 9): # Because groups of 3 chars in B64, *3
+        my_chunk = my_encode[i:i+9]
+        ext_chunk = ext_encode[i:i+9]
+        print(my_encode[i:i+9], "vs", ext_encode[i:i+9], end='')
+        if my_chunk != ext_chunk:
+            mismatch_found = True
+            print(" <--- MISMATCH", end='')
+        print()
+
+    if mismatch_found:
+        print("Mismatch found")
+    else:
+        print("No mismatch found")
+    print()
+
+    return mismatch_found
+
 if __name__ == "__main__":
-    print(B64.encode("Man"))
-    print(B64.encode("Ma"))
-    print(B64.encode("M"))
-    print(B64.encode("""Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."""))
+    test_encode("Man")
+    test_encode("Ma")
+    test_encode("M")
+    test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
+    test_encode(test_string)
+    
