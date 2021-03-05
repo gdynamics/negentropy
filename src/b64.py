@@ -70,7 +70,7 @@ class B64(MappedTranscoder):
         reverse_mapping = {v: k for k, v in B64.mapping.items()} 
         return "decode"
 
-def test_encode(plaintxt: str) -> str:
+def test_encode(plaintxt: str, chunk_size=3) -> str:
     mismatch_found = False
     my_encode = B64.encode(plaintxt).upper()
     ext_encode = base64.b64encode(plaintxt.encode()).decode().upper()
@@ -80,13 +80,13 @@ def test_encode(plaintxt: str) -> str:
         else:
             my_encode = my_encode + '?'
 
-    for i in range(0, len(my_encode), 9): # Because groups of 3 chars in B64, *3
-        my_chunk = my_encode[i:i+9]
-        ext_chunk = ext_encode[i:i+9]
-        print(my_encode[i:i+9], "vs", ext_encode[i:i+9], end='')
+    for i in range(0, len(my_encode), chunk_size*3): # Because groups of 3 chars in B64, *3
+        my_chunk = my_encode[i : i + chunk_size*3]
+        ext_chunk = ext_encode[i : i + chunk_size*3]
+        print(my_encode[i : i + chunk_size*3], "vs", ext_encode[i : i + chunk_size*3], end='')
         if my_chunk != ext_chunk:
             mismatch_found = True
-            print(" <--- MISMATCH", end='')
+            print(" <--- MISMATCH", my_chunk.encode().hex().upper(), "vs", ext_chunk.encode().hex().upper(), end='')
         print()
 
     if mismatch_found:
@@ -102,5 +102,5 @@ if __name__ == "__main__":
     test_encode("Ma")
     test_encode("M")
     test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
-    test_encode(test_string)
+    test_encode(test_string, chunk_size=1)
     
