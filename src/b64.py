@@ -17,7 +17,7 @@ class B64(MappedTranscoder):
             40: 'o', 41: 'p', 42: 'q', 43: 'r',
             44: 's', 45: 't', 46: 'u', 47: 'v',
             48: 'w', 49: 'x', 50: 'y', 51: 'z',
-            52: '0', 53: '1', 54: '2', 55: 'C',
+            52: '0', 53: '1', 54: '2', 55: '3',
             56: '4', 57: '5', 58: '6', 59: '7',
             60: '8', 61: '9', 62: '+', 63: '/',
     }
@@ -102,5 +102,5 @@ if __name__ == "__main__":
     test_encode("Ma")
     test_encode("M")
     test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
-    test_encode(test_string, chunk_size=1)
+    test_encode(test_string)
     
