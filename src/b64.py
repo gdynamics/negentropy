@@ -68,6 +68,14 @@ class B64(MappedTranscoder):
 
     def decode(ciphertxt: str) -> str:
         reverse_mapping = {v: k for k, v in B64.mapping.items()} 
+        if len(ciphertxt) < 4 or len(ciphertxt) % 4 != 0:
+            print("Invalid ciphertext! Needs to be a non-empty string with padding!")
+
+        cipherlst = ciphertxt.split()
+        plaintxt = ""
+        print(cipherlst)
+        for i in range(0, len(cipherlst), 4):
+            print(cipherlst[i:i+4])
         return "decode"
 
 def test_encode(plaintxt: str, chunk_size=3) -> str:
@@ -80,13 +88,15 @@ def test_encode(plaintxt: str, chunk_size=3) -> str:
         else:
             my_encode = my_encode + '?'
 
-    for i in range(0, len(my_encode), chunk_size*3): # Because groups of 3 chars in B64, *3
-        my_chunk = my_encode[i : i + chunk_size*3]
-        ext_chunk = ext_encode[i : i + chunk_size*3]
-        print(my_encode[i : i + chunk_size*3], "vs", ext_encode[i : i + chunk_size*3], end='')
+    for i in range(0, len(my_encode), chunk_size*4): # Because groups of 4 chars in B64, *3
+        my_chunk = my_encode[i : i + chunk_size*4]
+        ext_chunk = ext_encode[i : i + chunk_size*4]
+        print(my_encode[i : i + chunk_size*4], "vs",
+              ext_encode[i : i + chunk_size*4], end='')
         if my_chunk != ext_chunk:
             mismatch_found = True
-            print(" <--- MISMATCH", my_chunk.encode().hex().upper(), "vs", ext_chunk.encode().hex().upper(), end='')
+            print(" <--- MISMATCH", my_chunk.encode().hex().upper(), "vs",
+                                    ext_chunk.encode().hex().upper(), end='')
         print()
 
     if mismatch_found:
@@ -102,5 +112,8 @@ if __name__ == "__main__":
     test_encode("Ma")
     test_encode("M")
     test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
-    test_encode(test_string)
-    
+    test_encode(test_string, chunk_size=9)
+
+    B64.decode("TWFU")
+    B64.decode("TWE=")
+    B64.decode("TQ==")
