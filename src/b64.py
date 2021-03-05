@@ -71,11 +71,12 @@ class B64(MappedTranscoder):
         if len(ciphertxt) < 4 or len(ciphertxt) % 4 != 0:
             print("Invalid ciphertext! Needs to be a non-empty string with padding!")
 
-        cipherlst = ciphertxt.split()
+        cipherlst = [char for char in ciphertxt]
         plaintxt = ""
-        print(cipherlst)
         for i in range(0, len(cipherlst), 4):
-            print(cipherlst[i:i+4])
+            # First
+            first = reverse_mapping[cipherlst[i]] << 2 | reverse_mapping[cipherlst[i+1]] >> 4
+            print(first)
         return "decode"
 
 def test_encode(plaintxt: str, chunk_size=3) -> str:
