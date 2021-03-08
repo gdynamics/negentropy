@@ -77,6 +77,25 @@ class B64(MappedTranscoder):
             # First
             first = reverse_mapping[cipherlst[i]] << 2 | reverse_mapping[cipherlst[i+1]] >> 4
             print(first)
+
+            # Second
+            carry = (reverse_mapping[cipherlst[i+1]] & 0x0F) << 4 # Can just assume there's a second value
+            if cipherlst[i+2] == 0x61: # Padding char
+                plaintxt = plaintxt + first
+                break
+            else:
+                second = carry | reverse_mapping[cipherlst[i+2]] >> 2
+            print(second)
+
+            # Third
+            carry = (reverse_mapping[cipherlst[i+2]] & 0x03) << 6
+            if cipherlst[i+3] == 0x61: # Padding char
+                plaintxt = plaintxt + first + second
+                break
+            else:
+                third = carry | reverse_mapping[cipherlst[i+3]]
+            print(third)
+
         return "decode"
 
 def test_encode(plaintxt: str, chunk_size=3) -> str:
