@@ -76,21 +76,21 @@ class B64(MappedTranscoder):
         for i in range(0, len(cipherlst), 4):
             print([i for i in cipherlst[i:i+4]])
             # First
-            first = reverse_mapping[cipherlst[i]] << 2 |
+            first = reverse_mapping[cipherlst[i]] << 2 |\
                     reverse_mapping[cipherlst[i+1]] >> 4
             plaintxt.append(first)
 
             # Second
             if cipherlst[i+2] == '=': # Padding char
                 break
-            second = (reverse_mapping[cipherlst[i+1]] & 0x0F) << 4 |
+            second = (reverse_mapping[cipherlst[i+1]] & 0x0F) << 4 |\
                      reverse_mapping[cipherlst[i+2]] >> 2
             plaintxt.append(second)
 
             # Third
             if cipherlst[i+3] == '=': # Padding char
                 break
-            third = (reverse_mapping[cipherlst[i+2]] & 0x03) << 6 |
+            third = (reverse_mapping[cipherlst[i+2]] & 0x03) << 6 |\
                     reverse_mapping[cipherlst[i+3]]
             plaintxt.append(third)
 
