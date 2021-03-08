@@ -74,7 +74,6 @@ class B64(MappedTranscoder):
         cipherlst = [char for char in ciphertxt]
         plaintxt = []
         for i in range(0, len(cipherlst), 4):
-            print([i for i in cipherlst[i:i+4]])
             # First
             first = reverse_mapping[cipherlst[i]] << 2 |\
                     reverse_mapping[cipherlst[i+1]] >> 4
@@ -90,15 +89,13 @@ class B64(MappedTranscoder):
             # Third
             if cipherlst[i+3] == '=': # Padding char
                 break
-            print('x', reverse_mapping[cipherlst[i+2]] & 0x3)
-            print('y', (reverse_mapping[cipherlst[i+2]] & 0x3) << 6)
-            print('z', reverse_mapping[cipherlst[i+3]])
             third = (reverse_mapping[cipherlst[i+2]] & 0x03) << 6 |\
                     reverse_mapping[cipherlst[i+3]]
             plaintxt.append(third)
+        
+        plaintxt = bytes(plaintxt).decode()
 
-        print(plaintxt)
-        return "decode"
+        return plaintxt
 
 def test_encode(plaintxt: str, chunk_size=3) -> str:
     mismatch_found = False
