@@ -90,6 +90,9 @@ class B64(MappedTranscoder):
             # Third
             if cipherlst[i+3] == '=': # Padding char
                 break
+            print('x', reverse_mapping[cipherlst[i+2]] & 0x3)
+            print('y', (reverse_mapping[cipherlst[i+2]] & 0x3) << 6)
+            print('z', reverse_mapping[cipherlst[i+3]])
             third = (reverse_mapping[cipherlst[i+2]] & 0x03) << 6 |\
                     reverse_mapping[cipherlst[i+3]]
             plaintxt.append(third)
@@ -99,8 +102,8 @@ class B64(MappedTranscoder):
 
 def test_encode(plaintxt: str, chunk_size=3) -> str:
     mismatch_found = False
-    my_encode = B64.encode(plaintxt).upper()
-    ext_encode = base64.b64encode(plaintxt.encode()).decode().upper()
+    my_encode = B64.encode(plaintxt)
+    ext_encode = base64.b64encode(plaintxt.encode()).decode()
     while(len(my_encode) != len(ext_encode)):
         if len(my_encode) > len(ext_encode):
             ext_encode = ext_encode + '?'
@@ -114,8 +117,8 @@ def test_encode(plaintxt: str, chunk_size=3) -> str:
               ext_encode[i : i + chunk_size*4], end='')
         if my_chunk != ext_chunk:
             mismatch_found = True
-            print(" <--- MISMATCH", my_chunk.encode().hex().upper(), "vs",
-                                    ext_chunk.encode().hex().upper(), end='')
+            print(" <--- MISMATCH", my_chunk.encode().hex(), "vs",
+                                    ext_chunk.encode().hex(), end='')
         print()
 
     if mismatch_found:
@@ -133,6 +136,6 @@ if __name__ == "__main__":
     test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
     test_encode(test_string, chunk_size=9)
 
-    B64.decode("TWFU")
+    B64.decode("TWFu")
     B64.decode("TWE=")
     B64.decode("TQ==")
