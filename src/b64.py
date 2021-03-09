@@ -156,6 +156,8 @@ def test_decode(ciphertxt: str, chunk_size=3) -> str:
     return mismatch_found
 
 if __name__ == "__main__":
+    print('-'*90)
+
     print("Test encode")
     test_encode("Man")
     test_encode("Ma")
@@ -170,3 +172,6 @@ if __name__ == "__main__":
     test_decode("TWE=")
     test_decode("TQ==")
     test_decode("TWFu")
+    test_decode(B64.encode(test_string), chunk_size=9)
+
+    print('-'*90)
