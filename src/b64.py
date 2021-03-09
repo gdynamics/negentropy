@@ -126,13 +126,47 @@ def test_encode(plaintxt: str, chunk_size=3) -> str:
 
     return mismatch_found
 
+def test_decode(ciphertxt: str, chunk_size=3) -> str:
+    mismatch_found = False
+    my_decode = B64.decode(ciphertxt)
+    ext_decode = base64.b64decode(ciphertxt.encode()).decode()
+    while(len(my_decode) != len(ext_decode)):
+        if len(my_decode) > len(ext_decode):
+            ext_decode = ext_decode + '?'
+        else:
+            my_decode = my_decode + '?'
+
+    for i in range(0, len(my_decode), chunk_size*3): # Because groups of 3 chars in B64 plaintxt
+        my_chunk = my_decode[i : i + chunk_size*3]
+        ext_chunk = ext_decode[i : i + chunk_size*3]
+        print(my_decode[i : i + chunk_size*3], "vs",
+              ext_decode[i : i + chunk_size*3], end='')
+        if my_chunk != ext_chunk:
+            mismatch_found = True
+            print(" <--- MISMATCH", my_chunk.encode().hex(), "vs",
+                                    ext_chunk.encode().hex(), end='')
+        print()
+
+    if mismatch_found:
+        print("Mismatch found")
+    else:
+        print("No mismatch found")
+    print()
+
+    return mismatch_found
+
 if __name__ == "__main__":
+    print("Test encode")
     test_encode("Man")
     test_encode("Ma")
     test_encode("M")
     test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
     test_encode(test_string, chunk_size=9)
 
-    B64.decode("TWFu")
-    B64.decode("TWE=")
-    B64.decode("TQ==")
+    print('-'*90)
+
+    print("Test decode")
+    test_decode("TWFu")
+    test_decode("TWE=")
+    test_decode("TQ==")
+    test_decode("TWFu")
