@@ -107,7 +107,7 @@ def test_encode(plaintxt: str, chunk_size=3) -> str:
         else:
             my_encode = my_encode + '?'
 
-    for i in range(0, len(my_encode), chunk_size*4): # Because groups of 4 chars in B64, *3
+    for i in range(0, len(my_encode), chunk_size*4): # Because groups of 4 chars in B64 ciphertxt
         my_chunk = my_encode[i : i + chunk_size*4]
         ext_chunk = ext_encode[i : i + chunk_size*4]
         print(my_encode[i : i + chunk_size*4], "vs",
