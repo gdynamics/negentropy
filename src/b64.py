@@ -171,7 +171,6 @@ if __name__ == "__main__":
     test_decode("TWFu")
     test_decode("TWE=")
     test_decode("TQ==")
-    test_decode("TWFu")
     test_decode(B64.encode(test_string), chunk_size=9)
 
     print('-'*90)
