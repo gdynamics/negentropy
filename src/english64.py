@@ -2,24 +2,24 @@
 from mappedtranscoder import MappedTranscoder
 import base64 # Just for testing
 
-class B64(MappedTranscoder):
+class english64(MappedTranscoder):
     mapping = {
-             0: 'A',  1: 'B',  2: 'C',  3: 'D',
-             4: 'E',  5: 'F',  6: 'G',  7: 'H',
-             8: 'I',  9: 'J', 10: 'K', 11: 'L',
-            12: 'M', 13: 'N', 14: 'O', 15: 'P',
-            16: 'Q', 17: 'R', 18: 'S', 19: 'T',
-            20: 'U', 21: 'V', 22: 'W', 23: 'X',
-            24: 'Y', 25: 'Z', 26: 'a', 27: 'b',
-            28: 'c', 29: 'd', 30: 'e', 31: 'f',
-            32: 'g', 33: 'h', 34: 'i', 35: 'j',
-            36: 'k', 37: 'l', 38: 'm', 39: 'n',
-            40: 'o', 41: 'p', 42: 'q', 43: 'r',
-            44: 's', 45: 't', 46: 'u', 47: 'v',
-            48: 'w', 49: 'x', 50: 'y', 51: 'z',
-            52: '0', 53: '1', 54: '2', 55: '3',
-            56: '4', 57: '5', 58: '6', 59: '7',
-            60: '8', 61: '9', 62: '+', 63: '/',
+             0: 'the',   1: 'of',    2: 'to',    3: 'and',
+             4: 'a',     5: 'in',    6: 'is',    7: 'it',
+             8: 'you',   9: 'that', 10: 'he',   11: 'was',
+            12: 'for',  13: 'on',   14: 'are',  15: 'with',
+            16: 'as',   17: 'I',    18: 'his',  19: 'they',
+            20: 'be',   21: 'at',   22: 'one',  23: 'have',
+            24: 'this', 25: 'from', 26: 'or',   27: 'had',
+            28: 'by',   29: 'not',  30: 'word', 31: 'but',
+            32: 'what', 33: 'some', 34: 'we',   35: 'can',
+            36: 'out',  37: 'other',38: 'were', 39: 'all',
+            40: 'there',41: 'when', 42: 'up',   43: 'use',
+            44: 'your', 45: 'how',  46: 'said', 47: 'an',
+            48: 'each', 49: 'she',  50: 'which',51: 'do',
+            52: 'their',53: 'time', 54: 'if',   55: 'will',
+            56: 'way',  57: 'about',58: 'many', 59: 'then',
+            60: 'them', 61: 'write',62: 'would',63: 'like',
     }
 
     def encode(plaintxt: str) -> str:
