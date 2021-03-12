@@ -2,7 +2,7 @@
 from mappedtranscoder import MappedTranscoder
 import base64 # Just for testing
 
-class english64(MappedTranscoder):
+class English64(MappedTranscoder):
     mapping = {
              0: 'the',   1: 'of',    2: 'to',    3: 'and',
              4: 'a',     5: 'in',    6: 'is',    7: 'it',
@@ -32,7 +32,7 @@ class english64(MappedTranscoder):
             
             # First
             first = (plainint[i] & 0xFD) >> 2
-            first = B64.mapping[first]
+            first = English64.mapping[first]
 
             # Second
             carry = (plainint[i] & 0x03) << 4
@@ -41,7 +41,7 @@ class english64(MappedTranscoder):
                 second = carry
             else:
                 second = carry | ((plainint[i+1] & 0xF0) >> 4)
-            second = B64.mapping[second]
+            second = English64.mapping[second]
 
             # Third
             if padded:
@@ -53,16 +53,16 @@ class english64(MappedTranscoder):
                     third = carry
                 else:
                     third = carry | ((plainint[i+2] & 0xC0) >> 6)
-                third = B64.mapping[third]
+                third = English64.mapping[third]
 
             # Fourth
             if padded:
                 fourth = "="
             else:
                 fourth = plainint[i+2] & 0x3F
-                fourth = B64.mapping[fourth]
+                fourth = English64.mapping[fourth]
 
-            ciphertxt = ciphertxt + first + second + third + fourth 
+            ciphertxt = ' '.join([ciphertxt, first, second, third, fourth])
 
         return ciphertxt
 
@@ -159,18 +159,18 @@ if __name__ == "__main__":
     print('-'*90)
 
     print("Test encode")
-    test_encode("Man")
-    test_encode("Ma")
-    test_encode("M")
+    print(English64.encode("Man"))
+    print(English64.encode("Ma"))
+    print(English64.encode("M"))
     test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
-    test_encode(test_string, chunk_size=9)
+    print(English64.encode(test_string))
 
-    print('-'*90)
+    #print('-'*90)
 
-    print("Test decode")
-    test_decode("TWFu")
-    test_decode("TWE=")
-    test_decode("TQ==")
-    test_decode(B64.encode(test_string), chunk_size=9)
+    #print("Test decode")
+    #test_decode("TWFu")
+    #test_decode("TWE=")
+    #test_decode("TQ==")
+    #test_decode(B64.encode(test_string), chunk_size=9)
 
     print('-'*90)
