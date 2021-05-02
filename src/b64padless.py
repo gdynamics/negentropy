@@ -2,7 +2,7 @@
 from mappedtranscoder import MappedTranscoder
 import base64 # Just for testing
 
-class B64(MappedTranscoder):
+class B64padless(MappedTranscoder):
     mapping = {
              0: 'A',  1: 'B',  2: 'C',  3: 'D',
              4: 'E',  5: 'F',  6: 'G',  7: 'H',
@@ -28,39 +28,39 @@ class B64(MappedTranscoder):
         leng = len(plainint)
 
         for i in range(0, len(plainint), 3):
-            padded = False
+            end = False
             
             # First
             first = (plainint[i] & 0xFD) >> 2
-            first = B64.mapping[first]
+            first = B64padless.mapping[first]
 
             # Second
             carry = (plainint[i] & 0x03) << 4
             if i+1 > leng-1:
-                padded = True
+                end = True
                 second = carry
             else:
                 second = carry | ((plainint[i+1] & 0xF0) >> 4)
-            second = B64.mapping[second]
+            second = B64padless.mapping[second]
 
             # Third
-            if padded:
-                third = "="
+            if end:
+                third = ""
             else:
                 carry = (plainint[i+1] & 0x0F) << 2
                 if i+2 > leng-1:
-                    padded = True
+                    end = True
                     third = carry
                 else:
                     third = carry | ((plainint[i+2] & 0xC0) >> 6)
-                third = B64.mapping[third]
+                third = B64padless.mapping[third]
 
             # Fourth
-            if padded:
-                fourth = "="
+            if end:
+                fourth = ""
             else:
                 fourth = plainint[i+2] & 0x3F
-                fourth = B64.mapping[fourth]
+                fourth = B64padless.mapping[fourth]
 
             ciphertxt = ciphertxt + first + second + third + fourth 
 
@@ -99,8 +99,9 @@ class B64(MappedTranscoder):
 
 def test_encode(plaintxt: str, chunk_size=3) -> str:
     mismatch_found = False
-    my_encode = B64.encode(plaintxt)
+    my_encode = B64padless.encode(plaintxt)
     ext_encode = base64.b64encode(plaintxt.encode()).decode()
+    ext_encode = ext_encode.replace('=', '') # Remove padding
     while(len(my_encode) != len(ext_encode)):
         if len(my_encode) > len(ext_encode):
             ext_encode = ext_encode + '?'
@@ -128,7 +129,7 @@ def test_encode(plaintxt: str, chunk_size=3) -> str:
 
 def test_decode(ciphertxt: str, chunk_size=3) -> str:
     mismatch_found = False
-    my_decode = B64.decode(ciphertxt)
+    my_decode = B64padless.decode(ciphertxt)
     ext_decode = base64.b64decode(ciphertxt.encode()).decode()
     while(len(my_decode) != len(ext_decode)):
         if len(my_decode) > len(ext_decode):
