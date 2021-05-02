@@ -23,7 +23,7 @@ class English64(MappedTranscoder):
     }
 
     def encode(plaintxt: str) -> str:
-        ciphertxt = ""
+        ciphertxt = None
         plainint = [ord(x) for x in plaintxt]
         leng = len(plainint)
 
@@ -62,7 +62,8 @@ class English64(MappedTranscoder):
                 fourth = plainint[i+2] & 0x3F
                 fourth = English64.mapping[fourth]
 
-            ciphertxt = ' '.join([ciphertxt, first, second, third, fourth])
+            ciphertxt = ' '.join([ciphertxt, first, second, third, fourth] if ciphertxt
+                            else [first, second, third, fourth])
 
         return ciphertxt
 
