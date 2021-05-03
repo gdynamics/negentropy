@@ -28,7 +28,7 @@ class English64(MappedTranscoder):
         leng = len(plainint)
 
         for i in range(0, len(plainint), 3):
-            padded = False
+            end = False
             
             # First
             first = (plainint[i] & 0xFD) >> 2
@@ -37,27 +37,27 @@ class English64(MappedTranscoder):
             # Second
             carry = (plainint[i] & 0x03) << 4
             if i+1 > leng-1:
-                padded = True
+                end = True
                 second = carry
             else:
                 second = carry | ((plainint[i+1] & 0xF0) >> 4)
             second = English64.mapping[second]
 
             # Third
-            if padded:
-                third = "="
+            if end:
+                third = ""
             else:
                 carry = (plainint[i+1] & 0x0F) << 2
                 if i+2 > leng-1:
-                    padded = True
+                    end = True
                     third = carry
                 else:
                     third = carry | ((plainint[i+2] & 0xC0) >> 6)
                 third = English64.mapping[third]
 
             # Fourth
-            if padded:
-                fourth = "="
+            if end:
+                fourth = ""
             else:
                 fourth = plainint[i+2] & 0x3F
                 fourth = English64.mapping[fourth]
@@ -114,7 +114,7 @@ if __name__ == "__main__":
 
     print("Test decode")
     print(English64.decode("they one in said"))
-    test_decode("")
+    #test_decode("")
     #test_decode(B64.encode(test_string), chunk_size=9)
 
     print('-'*90)
