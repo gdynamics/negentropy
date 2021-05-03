@@ -67,13 +67,14 @@ class English64(MappedTranscoder):
 
         return ciphertxt
 
- def decode(ciphertxt: str) -> str:
-        reverse_mapping = {v: k for k, v in B64padless.mapping.items()}
+    def decode(ciphertxt: str) -> str:
+        reverse_mapping = {v: k for k, v in English64.mapping.items()}
+        ciphertxt = ciphertxt.split()
         cipher_len = len(ciphertxt)
         if cipher_len < 2:
             print("Invalid ciphertext! Needs to be a non-empty string with at least 2 characters!")
 
-        cipherlst = [char for char in ciphertxt]
+        cipherlst = [word for word in ciphertxt]
         plaintxt = []
         for i in range(0, len(cipherlst), 4):
             # First
@@ -109,12 +110,11 @@ if __name__ == "__main__":
     test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
     print(English64.encode(test_string))
 
-    #print('-'*90)
+    print('-'*90)
 
-    #print("Test decode")
-    #test_decode("TWFu")
-    #test_decode("TWE=")
-    #test_decode("TQ==")
+    print("Test decode")
+    print(English64.decode("they one in said"))
+    test_decode("")
     #test_decode(B64.encode(test_string), chunk_size=9)
 
     print('-'*90)
