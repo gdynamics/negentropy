@@ -69,8 +69,8 @@ class B64padless(MappedTranscoder):
     def decode(ciphertxt: str) -> str:
         reverse_mapping = {v: k for k, v in B64padless.mapping.items()} 
         cipher_len = len(ciphertxt)
-        if cipher_len < 1:
-            print("Invalid ciphertext! Needs to be a non-empty string!")
+        if cipher_len < 2:
+            print("Invalid ciphertext! Needs to be a non-empty string with at least 2 characters!")
 
         cipherlst = [char for char in ciphertxt]
         plaintxt = []
