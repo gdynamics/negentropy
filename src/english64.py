@@ -98,64 +98,6 @@ class English64(MappedTranscoder):
 
         return plaintxt
 
-def test_encode(plaintxt: str, chunk_size=3) -> str:
-    mismatch_found = False
-    my_encode = B64.encode(plaintxt)
-    ext_encode = base64.b64encode(plaintxt.encode()).decode()
-    while(len(my_encode) != len(ext_encode)):
-        if len(my_encode) > len(ext_encode):
-            ext_encode = ext_encode + '?'
-        else:
-            my_encode = my_encode + '?'
-
-    for i in range(0, len(my_encode), chunk_size*4): # Because groups of 4 chars in B64 ciphertxt
-        my_chunk = my_encode[i : i + chunk_size*4]
-        ext_chunk = ext_encode[i : i + chunk_size*4]
-        print(my_encode[i : i + chunk_size*4], "vs",
-              ext_encode[i : i + chunk_size*4], end='')
-        if my_chunk != ext_chunk:
-            mismatch_found = True
-            print(" <--- MISMATCH", my_chunk.encode().hex(), "vs",
-                                    ext_chunk.encode().hex(), end='')
-        print()
-
-    if mismatch_found:
-        print("Mismatch found")
-    else:
-        print("No mismatch found")
-    print()
-
-    return mismatch_found
-
-def test_decode(ciphertxt: str, chunk_size=3) -> str:
-    mismatch_found = False
-    my_decode = B64.decode(ciphertxt)
-    ext_decode = base64.b64decode(ciphertxt.encode()).decode()
-    while(len(my_decode) != len(ext_decode)):
-        if len(my_decode) > len(ext_decode):
-            ext_decode = ext_decode + '?'
-        else:
-            my_decode = my_decode + '?'
-
-    for i in range(0, len(my_decode), chunk_size*3): # Because groups of 3 chars in B64 plaintxt
-        my_chunk = my_decode[i : i + chunk_size*3]
-        ext_chunk = ext_decode[i : i + chunk_size*3]
-        print(my_decode[i : i + chunk_size*3], "vs",
-              ext_decode[i : i + chunk_size*3], end='')
-        if my_chunk != ext_chunk:
-            mismatch_found = True
-            print(" <--- MISMATCH", my_chunk.encode().hex(), "vs",
-                                    ext_chunk.encode().hex(), end='')
-        print()
-
-    if mismatch_found:
-        print("Mismatch found")
-    else:
-        print("No mismatch found")
-    print()
-
-    return mismatch_found
-
 if __name__ == "__main__":
     print('-'*90)
 
