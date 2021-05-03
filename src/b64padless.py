@@ -67,8 +67,9 @@ class B64padless(MappedTranscoder):
         return ciphertxt
 
     def decode(ciphertxt: str) -> str:
-        reverse_mapping = {v: k for k, v in B64.mapping.items()} 
-        if len(ciphertxt) < 1:
+        reverse_mapping = {v: k for k, v in B64padless.mapping.items()} 
+        cipher_len = len(ciphertxt)
+        if cipher_len < 1:
             print("Invalid ciphertext! Needs to be a non-empty string!")
 
         cipherlst = [char for char in ciphertxt]
@@ -80,14 +81,14 @@ class B64padless(MappedTranscoder):
             plaintxt.append(first)
 
             # Second
-            if cipherlst[i+2] == '=': # Padding char
+            if i+2 >= cipher_len: # Reached end
                 break
             second = (reverse_mapping[cipherlst[i+1]] & 0x0F) << 4 |\
                      reverse_mapping[cipherlst[i+2]] >> 2
             plaintxt.append(second)
 
             # Third
-            if cipherlst[i+3] == '=': # Padding char
+            if i+3 >= cipher_len: # Reached end
                 break
             third = (reverse_mapping[cipherlst[i+2]] & 0x03) << 6 |\
                     reverse_mapping[cipherlst[i+3]]
@@ -129,8 +130,9 @@ def test_encode(plaintxt: str, chunk_size=3) -> str:
 
 def test_decode(ciphertxt: str, chunk_size=3) -> str:
     mismatch_found = False
+    padded_ciphertxt = ciphertxt + '='*((4-(len(ciphertxt)+4))%4)
     my_decode = B64padless.decode(ciphertxt)
-    ext_decode = base64.b64decode(ciphertxt.encode()).decode()
+    ext_decode = base64.b64decode(padded_ciphertxt.encode()).decode()
     while(len(my_decode) != len(ext_decode)):
         if len(my_decode) > len(ext_decode):
             ext_decode = ext_decode + '?'
@@ -170,8 +172,8 @@ if __name__ == "__main__":
 
     print("Test decode")
     test_decode("TWFu")
-    test_decode("TWE=")
-    test_decode("TQ==")
-    test_decode(B64.encode(test_string), chunk_size=9)
+    test_decode("TWE")
+    test_decode("TQ")
+    test_decode(B64padless.encode(test_string), chunk_size=9)
 
     print('-'*90)
