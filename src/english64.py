@@ -67,10 +67,11 @@ class English64(MappedTranscoder):
 
         return ciphertxt
 
-    def decode(ciphertxt: str) -> str:
-        reverse_mapping = {v: k for k, v in B64.mapping.items()} 
-        if len(ciphertxt) < 4 or len(ciphertxt) % 4 != 0:
-            print("Invalid ciphertext! Needs to be a non-empty string with padding!")
+ def decode(ciphertxt: str) -> str:
+        reverse_mapping = {v: k for k, v in B64padless.mapping.items()}
+        cipher_len = len(ciphertxt)
+        if cipher_len < 2:
+            print("Invalid ciphertext! Needs to be a non-empty string with at least 2 characters!")
 
         cipherlst = [char for char in ciphertxt]
         plaintxt = []
@@ -81,19 +82,19 @@ class English64(MappedTranscoder):
             plaintxt.append(first)
 
             # Second
-            if cipherlst[i+2] == '=': # Padding char
+            if i+2 >= cipher_len: # Reached end
                 break
             second = (reverse_mapping[cipherlst[i+1]] & 0x0F) << 4 |\
                      reverse_mapping[cipherlst[i+2]] >> 2
             plaintxt.append(second)
 
             # Third
-            if cipherlst[i+3] == '=': # Padding char
+            if i+3 >= cipher_len: # Reached end
                 break
             third = (reverse_mapping[cipherlst[i+2]] & 0x03) << 6 |\
                     reverse_mapping[cipherlst[i+3]]
             plaintxt.append(third)
-        
+
         plaintxt = bytes(plaintxt).decode()
 
         return plaintxt
