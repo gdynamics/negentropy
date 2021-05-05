@@ -24,42 +24,41 @@ class B64padless(MappedTranscoder):
 
     def encode(plaintxt: bytes) -> str:
         ciphertxt = ""
-        plainint = plaintxt#[ord(x) for x in plaintxt]
-        leng = len(plainint)
+        leng = len(plaintxt)
 
-        for i in range(0, len(plainint), 3):
+        for i in range(0, len(plaintxt), 3):
             end = False
             
             # First
-            first = (plainint[i] & 0xFD) >> 2
+            first = (plaintxt[i] & 0xFD) >> 2
             first = B64padless.mapping[first]
 
             # Second
-            carry = (plainint[i] & 0x03) << 4
+            carry = (plaintxt[i] & 0x03) << 4
             if i+1 > leng-1:
                 end = True
                 second = carry
             else:
-                second = carry | ((plainint[i+1] & 0xF0) >> 4)
+                second = carry | ((plaintxt[i+1] & 0xF0) >> 4)
             second = B64padless.mapping[second]
 
             # Third
             if end:
                 third = ""
             else:
-                carry = (plainint[i+1] & 0x0F) << 2
+                carry = (plaintxt[i+1] & 0x0F) << 2
                 if i+2 > leng-1:
                     end = True
                     third = carry
                 else:
-                    third = carry | ((plainint[i+2] & 0xC0) >> 6)
+                    third = carry | ((plaintxt[i+2] & 0xC0) >> 6)
                 third = B64padless.mapping[third]
 
             # Fourth
             if end:
                 fourth = ""
             else:
-                fourth = plainint[i+2] & 0x3F
+                fourth = plaintxt[i+2] & 0x3F
                 fourth = B64padless.mapping[fourth]
 
             ciphertxt = ciphertxt + first + second + third + fourth 
