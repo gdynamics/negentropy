@@ -19,3 +19,16 @@ if __name__ == "__main__":
         f.write(data)
 
     print('-'*90)
+
+    print('Reading ../test/macbeth.txt.enc')
+    with open('../test/macbeth.txt.enc', 'rb') as f:
+        data = f.read()
+
+    print('Converting data to english64')
+    data = English64.encode(data)
+
+    print('Writing base64 data to ../test/macbeth.txt.enc.e64')
+    with open('../test/macbeth.txt.enc.e64', 'w+') as f:
+        f.write(data)
+
+    print('-'*90)
