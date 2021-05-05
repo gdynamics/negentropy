@@ -22,9 +22,9 @@ class B64(MappedTranscoder):
             60: '8', 61: '9', 62: '+', 63: '/',
     }
 
-    def encode(plaintxt: str) -> str:
+    def encode(plaintxt: bytes) -> str:
         ciphertxt = ""
-        plainint = [ord(x) for x in plaintxt]
+        plainint = plaintxt#[ord(x) for x in plaintxt]
         leng = len(plainint)
 
         for i in range(0, len(plainint), 3):
@@ -66,7 +66,7 @@ class B64(MappedTranscoder):
 
         return ciphertxt
 
-    def decode(ciphertxt: str) -> str:
+    def decode(ciphertxt: str) -> bytes:
         reverse_mapping = {v: k for k, v in B64.mapping.items()} 
         if len(ciphertxt) < 4 or len(ciphertxt) % 4 != 0:
             print("Invalid ciphertext! Needs to be a non-empty string with padding!")
@@ -93,14 +93,14 @@ class B64(MappedTranscoder):
                     reverse_mapping[cipherlst[i+3]]
             plaintxt.append(third)
         
-        plaintxt = bytes(plaintxt).decode()
+        plaintxt = bytes(plaintxt)
 
         return plaintxt
 
-def test_encode(plaintxt: str, chunk_size=3) -> str:
+def test_encode(plaintxt: bytes, chunk_size=3) -> bool:
     mismatch_found = False
     my_encode = B64.encode(plaintxt)
-    ext_encode = base64.b64encode(plaintxt.encode()).decode()
+    ext_encode = base64.b64encode(plaintxt).decode()
     while(len(my_encode) != len(ext_encode)):
         if len(my_encode) > len(ext_encode):
             ext_encode = ext_encode + '?'
@@ -126,7 +126,7 @@ def test_encode(plaintxt: str, chunk_size=3) -> str:
 
     return mismatch_found
 
-def test_decode(ciphertxt: str, chunk_size=3) -> str:
+def test_decode(ciphertxt: str, chunk_size=3) -> bool:
     mismatch_found = False
     my_decode = B64.decode(ciphertxt)
     ext_decode = base64.b64decode(ciphertxt.encode()).decode()
@@ -141,9 +141,9 @@ def test_decode(ciphertxt: str, chunk_size=3) -> str:
         ext_chunk = ext_decode[i : i + chunk_size*3]
         print(my_decode[i : i + chunk_size*3], "vs",
               ext_decode[i : i + chunk_size*3], end='')
-        if my_chunk != ext_chunk:
+        if my_chunk.decode() != ext_chunk:
             mismatch_found = True
-            print(" <--- MISMATCH", my_chunk.encode().hex(), "vs",
+            print(" <--- MISMATCH", my_chunk.hex(), "vs",
                                     ext_chunk.encode().hex(), end='')
         print()
 
@@ -159,10 +159,10 @@ if __name__ == "__main__":
     print('-'*90)
 
     print("Test encode")
-    test_encode("Man")
-    test_encode("Ma")
-    test_encode("M")
-    test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
+    test_encode(b"Man")
+    test_encode(b"Ma")
+    test_encode(b"M")
+    test_string = b"Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
     test_encode(test_string, chunk_size=9)
 
     print('-'*90)
