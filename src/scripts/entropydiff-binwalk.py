@@ -19,11 +19,13 @@ if __name__ == "__main__":
     file1_ent = binwalk_entropy(file1)
     file2_ent = binwalk_entropy(file2)
 
-    difference = max(file1_ent, file2_ent) - min(file1_ent, file2_ent)
+    difference = file1_ent - file2_ent
 
     size = max(len(file1), len(file2))
+    
+    print('\n' + '-'*50)
     print(f"{file1.ljust(size)} : {file1_ent}")
     print(f"{file2.ljust(size)} : {file2_ent}")
-    print('-'*30)
+    print(' '*(size+2) + '-'*10)
     print("Difference".ljust(size), ':', difference)
-
+    print('-'*50, end='\n\n')
