@@ -2,7 +2,7 @@
 import os, sys
 
 sys.path.append(os.path.abspath('../'))
-from b64 import B64
+from english64 import English64
 
 if __name__ == "__main__":
     print('-'*90)
@@ -11,11 +11,11 @@ if __name__ == "__main__":
     with open('../test/macbeth.txt', 'r') as f:
         data = f.read()
 
-    print('Converting data to base64 with padding')
-    data = B64.encode(data)
+    print('Converting data to english64')
+    data = English64.encode(data)
 
-    print('Writing base64 data to ../test/macbeth.txt.b64')
-    with open('../test/machbeth.txt.b64', 'w+') as f:
+    print('Writing base64 data to ../test/macbeth.txt.e64')
+    with open('../test/machbeth.txt.e64', 'w+') as f:
         f.write(data)
 
     print('-'*90)
