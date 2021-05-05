@@ -22,9 +22,9 @@ class English64(MappedTranscoder):
             60: 'them', 61: 'write',62: 'would',63: 'like',
     }
 
-    def encode(plaintxt: str) -> str:
+    def encode(plaintxt: bytes) -> str:
         ciphertxt = None
-        plainint = [ord(x) for x in plaintxt]
+        plainint = plaintxt#[ord(x) for x in plaintxt]
         leng = len(plainint)
 
         for i in range(0, len(plainint), 3):
@@ -67,7 +67,7 @@ class English64(MappedTranscoder):
 
         return ciphertxt
 
-    def decode(ciphertxt: str) -> str:
+    def decode(ciphertxt: str) -> bytes:
         reverse_mapping = {v: k for k, v in English64.mapping.items()}
         ciphertxt = ciphertxt.split()
         cipher_len = len(ciphertxt)
@@ -96,7 +96,7 @@ class English64(MappedTranscoder):
                     reverse_mapping[cipherlst[i+3]]
             plaintxt.append(third)
 
-        plaintxt = bytes(plaintxt).decode()
+        plaintxt = bytes(plaintxt)
 
         return plaintxt
 
@@ -104,10 +104,10 @@ if __name__ == "__main__":
     print('-'*90)
 
     print("Test encode")
-    print(English64.encode("Man"))
-    print(English64.encode("Ma"))
-    print(English64.encode("M"))
-    test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
+    print(English64.encode(b"Man"))
+    print(English64.encode(b"Ma"))
+    print(English64.encode(b"M"))
+    test_string = b"Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
     print(English64.encode(test_string))
 
     print('-'*90)
