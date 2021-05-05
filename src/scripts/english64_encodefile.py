@@ -6,6 +6,7 @@ from english64 import English64
 
 if __name__ == "__main__":
     print('-'*90)
+    print('Unencrypted sample file macbeth.txt...')
 
     print('Reading ../test/macbeth.txt')
     with open('../test/macbeth.txt', 'rb') as f:
@@ -19,6 +20,7 @@ if __name__ == "__main__":
         f.write(data)
 
     print('-'*90)
+    print('Encrypted sample file macbeth.txt...')
 
     print('Reading ../test/macbeth.txt.enc')
     with open('../test/macbeth.txt.enc', 'rb') as f:
