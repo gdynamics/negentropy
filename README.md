@@ -1,7 +1,7 @@
 # Negentropy
 
-*The concept and phrace "negative entropy" was introduced by Erwin Schrödinger in his 1944
-popular-science book What is Life? Later, Léon Brillouin shortened the phrase to negentropy.*
+_The concept and phrase "negative entropy" was introduced by Erwin Schrödinger in his 1944
+popular-science book What is Life? Later, Léon Brillouin shortened the phrase to negentropy._
 ([source](https://en.wikipedia.org/wiki/Negentropy))
 
 In short, negentropy is the opposite of entropy.
@@ -9,7 +9,7 @@ In short, negentropy is the opposite of entropy.
 ## Current tools
 
 ### entropydiff-binwalk.py
-This tool, given the paths of two files, will attempt to use binwalk through subprocess'ing
+This tool, given the paths of two files, will attempt to use `binwalk` through subprocess'ing
 `binwalk -E {file}` to both files, and capture the values returned. It then prints out the entropy
 of each individual file, and then the difference between them.
 
@@ -23,29 +23,29 @@ going to be hiding in is the best method to measure utility.
 
 ### openssl-aes256.sh
 A very, very simple Bash script. Simply pass it a filename, and it will create an encrypted version
-of that file with the original filename with '.enc' at the end. The password it used to encrypt the
-text is the all-too-secure password of "password", and the specific AES encryption method is
-AES-256-CBC.
+of that file with the original filename with **'.enc'** at the end. The password it used to encrypt the
+text is the all-too-secure password of **"password"**, and the specific AES encryption method is
+**AES-256-CBC**.
 
 ### b64.py & b64padless.py -> scripts/b64_encodefile.py
 
-b64.py & b64padless.py are scripts which include B64 and B64padless MappedTranscoder classes
-which can perform perform Base64 encoding and decoding. B64 performs normal Base64 encoding &
-decoding, and B64Padless performs Base64 encoding & decoding without the need for padding.
+`b64.py` & `b64padless.py` are scripts which include `B64` and `B64padless` `MappedTranscoder` classes
+which can perform perform Base64 encoding and decoding. `B64` performs normal Base64 encoding &
+decoding, and `B64Padless` performs Base64 encoding & decoding without the need for padding.
 
-The script b64_encodefile.py is a tool which uses B64 to encode a normal version and an encrypted
-version of Macbeth, and write out their results to test/macbeth.txt.b64 & test/macbeth.txt.enc.b64.
-There is no script for doing such with B64padless, as it did not seem necessary.
+The script `b64_encodefile.py` is a tool which uses `B64` to encode a normal version and an encrypted
+version of Macbeth, and write out their results to `test/macbeth.txt.b64` & `test/macbeth.txt.enc.b64`.
+There is no script for doing such with `B64padless`, as it did not seem necessary.
 
 ### english64.py -> scripts/english64_encodefile.py
-english64.py is a script which includes an English64 MappedTranscoder class which can perform
+`english64.py` is a script which includes an `English64` `MappedTranscoder` class which can perform
 Base64 encoding and decoding with a custom mapping functionality. Namely, instead of outputting
-characters, it outputs words with spaces between them. The words are mapped from 00->63 against the
-64 most common words in the english language according to 1-1000.txt.
+characters, it outputs words with spaces between them. The words are mapped from **0->63** against the
+64 most common words in the english language according to `1-1000.txt`.
 
-The script english64_encodefile.py is a tool which uses English64 to encode a normal version and an
-encrypted version of Macbeth, and write out their results to test/macbeth.txt.e64 and
-test/macbeth.txt.enc.e64.
+The script `english64_encodefile.py` is a tool which uses `English64` to encode a normal version and an
+encrypted version of Macbeth, and write out their results to `test/macbeth.txt.e64` and
+`test/macbeth.txt.enc.e64`.
 
 By expanding single characters to entire english words with spacing, the hope is to decrease the
 apparent entropy to a level which mimics actual English text. This method, naturally, can expand
@@ -83,17 +83,17 @@ so they can capture a dump or search for decryption keys to decrypt the data the
 
 By expanding the existing data to take up more space than it needs to, and converting truly random
 data into things which are nonrandom, such as words, we can decrease the entropy of the data to the
-eyes of tools such as binwalk.
+eyes of tools such as `binwalk`.
 
 As a result, it may be possible to defeat both simple information gathering methods (such as
-binwalk's entropy measurement) and simple system & network security services & tools which search
+`binwalk`'s entropy measurement) and simple system & network security services & tools which search
 for encrypted data.
 
 ## Warning
 
 ### This is research, not gospel
 This tool is a bit of independent research I undertook on my own, simply to see if I can trick
-binwalk and perhaps other entropy measuring tools into not seeing my secrets. I learned the entropy
+`binwalk` and perhaps other entropy measuring tools into not seeing my secrets. I learned the entropy
 measurement trick from firmware analysis tutorials a few years ago, and simply had an idea one day
 on whether I could decrease entropy in a way that preserved the security of the encrypted data.
 
@@ -119,5 +119,5 @@ software engineer building something such as an IoT device, you will have expone
 gain from learning proper cryptographic principles, trust models, hardware security methodologies,
 etc than from trying to implement this tool in your deployment.
 
-tl;dr: This tool is more of a sleight at uncreative, untrained eyes than a security model unto
-itself. It is meant to trick tools and fools, not experts.
+**tl;dr: This tool is more of a sleight at uncreative, untrained eyes than a security model unto
+itself. It is meant to trick tools and fools, not experts.**
