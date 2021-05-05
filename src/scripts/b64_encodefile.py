@@ -2,16 +2,20 @@
 import os, sys
 
 sys.path.append(os.path.abspath('../'))
-import b64
+from b64 import B64
 
 if __name__ == "__main__":
     print('-'*90)
 
-    print("Test encode")
-    b64.test_encode("Man")
-    b64.test_encode("Ma")
-    b64.test_encode("M")
-    test_string = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
-    b64.test_encode(test_string, chunk_size=9)
+    print('Reading ../test/macbeth.txt')
+    with open('../test/macbeth.txt', 'r') as f:
+        data = f.read()
+
+    print('Converting data to base64 with padding')
+    data = B64.encode(data)
+
+    print('Writing base64 data to ../test/macbeth.txt.b64')
+    with open('../test/machbeth.txt.b64', 'w+') as f:
+        f.write(data)
 
     print('-'*90)
