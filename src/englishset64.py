@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from mappedtranscoder import MappedTranscoder
+import random
 
 class EnglishSet64(MappedTranscoder):
     def generate_mapping(filename: str) -> dict:
@@ -19,6 +20,7 @@ class EnglishSet64(MappedTranscoder):
         return mapping
 
     def encode(plaintxt: bytes) -> str:
+        mapping = EnglishSet64.generate_mapping('1-1000.txt')
         ciphertxt = None
         leng = len(plaintxt)
 
@@ -27,7 +29,7 @@ class EnglishSet64(MappedTranscoder):
             
             # First
             first = (plaintxt[i] & 0xFD) >> 2
-            first = English64.mapping[first]
+            first = random.choice(mapping[first])
 
             # Second
             carry = (plaintxt[i] & 0x03) << 4
@@ -36,7 +38,7 @@ class EnglishSet64(MappedTranscoder):
                 second = carry
             else:
                 second = carry | ((plaintxt[i+1] & 0xF0) >> 4)
-            second = English64.mapping[second]
+            second = random.choice(mapping[second])
 
             # Third
             if end:
@@ -48,14 +50,14 @@ class EnglishSet64(MappedTranscoder):
                     third = carry
                 else:
                     third = carry | ((plaintxt[i+2] & 0xC0) >> 6)
-                third = English64.mapping[third]
+                third = random.choice(mapping[third])
 
             # Fourth
             if end:
                 fourth = ""
             else:
                 fourth = plaintxt[i+2] & 0x3F
-                fourth = English64.mapping[fourth]
+                fourth = random.choice(mapping[fourth])
 
             ciphertxt = ' '.join([ciphertxt, first, second, third, fourth] if ciphertxt
                             else [first, second, third, fourth])
@@ -63,7 +65,8 @@ class EnglishSet64(MappedTranscoder):
         return ciphertxt
 
     def decode(ciphertxt: str) -> bytes:
-        reverse_mapping = {v: k for k, v in English64.mapping.items()}
+        mapping = EnglishSet64.generate_mapping('1-1000.txt')
+        reverse_mapping = {v: k for k, v in mapping.items()}
         ciphertxt = ciphertxt.split()
         cipher_len = len(ciphertxt)
         if cipher_len < 2:
@@ -98,16 +101,14 @@ class EnglishSet64(MappedTranscoder):
 if __name__ == "__main__":
     print('-'*90)
 
-    print(EnglishSet64.generate_mapping('1-1000.txt'))
+    print("Test encode")
+    print(EnglishSet64.encode(b"Man"))
+    print(EnglishSet64.encode(b"Ma"))
+    print(EnglishSet64.encode(b"M"))
+    test_string = b"Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
+    print(EnglishSet64.encode(test_string))
 
-    #print("Test encode")
-    #print(English64.encode(b"Man"))
-    #print(English64.encode(b"Ma"))
-    #print(English64.encode(b"M"))
-    #test_string = b"Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure."
-    #print(English64.encode(test_string))
-
-    #print('-'*90)
+    print('-'*90)
 
     #print("Test decode")
     #print(English64.decode("they one in said"))
