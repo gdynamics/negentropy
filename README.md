@@ -6,6 +6,21 @@ popular-science book What is Life? Later, Léon Brillouin shortened the phrase t
 
 In short, negentropy is the opposite of entropy.
 
+Malware authors & corporate software developers alike attempt to hide information from
+malware analysts & general reverse engineers alike. While hiding information in a measure
+which provides "security through obscurity" is suboptimal, it can evade the eyes of beginners
+and automated tools.
+
+As shown later, this is because one of the metrics used to identify encrypted information
+is by measuring the entropy of data using tools like `binwalk`.
+
+Thus, by repurposing a tool every technical person ought to know exists (especially reverse
+engineers), Base64 encoding, we can attempt to hide encrypted data by intentionally decreasing
+the entropy to a level which is similar enough to plaintext that it is not seen with a simple
+glance or an unintelligent automated analysis tool.
+
+
+
 ## General Purpose Tools
 
 ### entropydiff_binwalk.py
@@ -39,6 +54,8 @@ A very, very simple Bash script. Simply pass it a filename, and it will create a
 of that file with the original filename with **'.enc'** at the end. The password it used to encrypt the
 text is the all-too-secure password of **"password"**, and the specific AES encryption method is
 **AES-256-CBC**.
+
+
 
 ## Negentropic Implementations
 
