@@ -15,7 +15,7 @@ As shown later, this is because one of the metrics used to identify encrypted in
 is by measuring the entropy of data using tools like `binwalk`.
 
 Thus, by repurposing a tool every technical person ought to know exists (especially reverse
-engineers), Base64 encoding, we can attempt to hide encrypted data by intentionally decreasing
+engineers), a Base64 transcoder, we can attempt to hide encrypted data by intentionally decreasing
 the entropy to a level which is similar enough to plaintext that it is not seen with a simple
 glance or an unintelligent automated analysis tool.
 
