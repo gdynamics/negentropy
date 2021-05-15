@@ -6,7 +6,7 @@ popular-science book What is Life? Later, Léon Brillouin shortened the phrase t
 
 In short, negentropy is the opposite of entropy.
 
-## Current tools
+## General Purpose Tools
 
 ### entropydiff_binwalk.py
 This tool, given the paths of two files, will attempt to use `binwalk` through subprocess'ing
@@ -39,6 +39,8 @@ A very, very simple Bash script. Simply pass it a filename, and it will create a
 of that file with the original filename with **'.enc'** at the end. The password it used to encrypt the
 text is the all-too-secure password of **"password"**, and the specific AES encryption method is
 **AES-256-CBC**.
+
+## Negentropic Implementations
 
 ### b64.py & b64padless.py -> scripts/b64_encodefile.py
 
