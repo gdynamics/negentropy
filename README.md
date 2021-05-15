@@ -54,6 +54,54 @@ it appears to generate semi-successful results. Due to the fact that we have a s
 that are all short, very common, and very simple to pronounce, the entropy of the out is actually
 relatively significantly lower than normal English text.
 
+### englishset64.py -> scripts/englishset64_encodefile.py
+`englishset64.py` is a script which includes an `EnglishSet64` `MappedTranscoder` class which can
+perform Base64 encoding and decoding with a custom mapping functionality. In a stark contrast to
+`english64.py`, this script will generate a mapping to all of the words (text separated by
+whitespace) in its key file. This means firstly that 0:63 map to a list of words rather than to one
+single word each. This makes encoding slightly slower, and decoding much slower, as decoding has to
+perform a O(n^2) search for the corresponding index to a given word in the key, rather than simply
+using the reverse mapping trick used to get O(1) through dicts in b64, english64, etc. An important
+implementation detail is that the methodology for choosing a word out of the list corresponding to
+an index is done randomly, through Python's `random.choice()` functionality.
+
+The script `englishset64_encodefile.py` is a tool which uses `EnglishSet64` to encode a plaintext
+version and an encrypted version of Macbeth, and write out their results to
+`test/macbeth.txt.es64`, `test/macbeth.txt.enc.1.es64`, and `test/macbeth.txt.enc.2.es64`.
+
+Identically to `English64`, by expanding single characters to entire english words with spacing, the
+hope is to decrease the apparent entropy to a level which mimics actual English text. This method,
+naturally, can expand the size of the output data. However, as opposed to `English64`, `EnglishSet64`
+generates text that is 1 to the size of the largest word in your key file of the original. By
+utilizing a large list of words per index rather than a single word, attacks which attempt to
+detect the information hiding and reverse it by frequency analysis of words, as well as attempts
+which simply discover that there are 64 unique words are rendered useless. Also, by utilizing a key
+file, you can dynamically tune your entropy to better match the kind of text you intend to imitate.
+An approach with a custom key file may do something as simple as a Bash script where a text file is
+cleaned of all special characters, split into newlines, and run through the `uniq` utility.
+Finally, through the implementation of `random.choice`, no given input and key file will be likely
+to generate identical or particularly similar results, making an attack that re-encodes its
+hidden data per-copy to new system not discoverable and easily rooted out through searching for a
+single identical ciphertext, and each generated ciphertext has a slightly different entropy.
+ 
+It is important to note for anyone attempting to generate their own key file, however, that each
+word in the key file must be unique and never repeated, as otherwise you would incorrectly decode
+the word to the first index which has that word, rather than the original number, which may
+correspond to the 2nd or later index with that word.
+
+As for its success, `EnglishSet64` does its job as described. It, unsurprisingly, has an entropy
+closer to the cleartext than `English64` does, most obviously because they share the same source,
+`1-1000.txt` in their current implementations, and `EnglishSet64` utilizes all 1000 words rather
+than just the 64 most common, giving it a wider variety of characters, word lengths, etc. The best
+way I can think of detecting if someone is using this approach in multiple places from data alone
+appears to be that the entropies of all ciphertexts with the same key and input will likely be
+within a specific range of each other. More complex detection methodologies like searching for
+batches of text with a lot of the words in a known key file or words from a previous ciphertext
+may be possible. Most obviously, however, is just that the english is pretty much just as
+nonsensical, unpunctuated, and uncapitalized as `English64`, making actual well trained analysis
+show something is "up" very quickly.
+
+
 ## Use cases
 
 ### Information hiding
