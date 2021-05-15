@@ -20,7 +20,7 @@ if __name__ == "__main__":
         f.write(data)
 
     print('-'*90)
-    print('Encrypted sample file macbeth.txt...')
+    print('Encrypted sample file macbeth.txt.enc...')
 
     print('Reading ../test/macbeth.txt.enc')
     with open('../test/macbeth.txt.enc', 'rb') as f:
