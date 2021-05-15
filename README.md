@@ -21,6 +21,19 @@ It is possible to compare the results to a larger, more general text as well, if
 looking to compare to a more "global" baseline. However, comparing to the kind of data you are
 going to be hiding in is the best method to measure utility.
 
+Example usage, comparing the variance between normal macbeth and an encrypted macbeth hidden with
+`EnglishSet64.py`, utilizing `1-1000.txt` as its key file:
+```
+.../negentropy$ ./src/scripts/entropydiff_binwalk.py ./src/test/macbeth.txt ./src/test/macbeth.txt.enc.2.es64
+
+--------------------------------------------------
+./src/test/macbeth.txt            : 0.648474
+./src/test/macbeth.txt.enc.2.es64 : 0.5141
+                                   ----------
+Difference                        : 0.134374
+-------------------------------------------------- 
+```
+
 ### openssl_aes256.sh
 A very, very simple Bash script. Simply pass it a filename, and it will create an encrypted version
 of that file with the original filename with **'.enc'** at the end. The password it used to encrypt the
