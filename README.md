@@ -21,7 +21,7 @@ It is possible to compare the results to a larger, more general text as well, if
 looking to compare to a more "global" baseline. However, comparing to the kind of data you are
 going to be hiding in is the best method to measure utility.
 
-### openssl-aes256.sh
+### openssl_aes256.sh
 A very, very simple Bash script. Simply pass it a filename, and it will create an encrypted version
 of that file with the original filename with **'.enc'** at the end. The password it used to encrypt the
 text is the all-too-secure password of **"password"**, and the specific AES encryption method is
