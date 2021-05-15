@@ -8,7 +8,7 @@ In short, negentropy is the opposite of entropy.
 
 ## Current tools
 
-### entropydiff-binwalk.py
+### entropydiff_binwalk.py
 This tool, given the paths of two files, will attempt to use `binwalk` through subprocess'ing
 `binwalk -E {file}` to both files, and capture the values returned. It then prints out the entropy
 of each individual file, and then the difference between them.
