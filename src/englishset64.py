@@ -11,13 +11,20 @@ class EnglishSet64(MappedTranscoder):
 
         data = data.split()
 
-        for i in range(0,64):
+        for i in range(0, 64):
             mapping[i] = []
 
         for i in range(0, len(data)):
             mapping[i%64].append(data[i])
 
         return mapping
+
+    def mapping_index(mapping: dict, word: str) -> int:
+        for i, lst in mapping.items():
+            if word in lst:
+                return i
+
+        return -1
 
     def encode(plaintxt: bytes) -> str:
         mapping = EnglishSet64.generate_mapping('1-1000.txt')
@@ -66,7 +73,6 @@ class EnglishSet64(MappedTranscoder):
 
     def decode(ciphertxt: str) -> bytes:
         mapping = EnglishSet64.generate_mapping('1-1000.txt')
-        reverse_mapping = {v: k for k, v in mapping.items()}
         ciphertxt = ciphertxt.split()
         cipher_len = len(ciphertxt)
         if cipher_len < 2:
@@ -76,22 +82,22 @@ class EnglishSet64(MappedTranscoder):
         plaintxt = []
         for i in range(0, len(cipherlst), 4):
             # First
-            first = reverse_mapping[cipherlst[i]] << 2 |\
-                    reverse_mapping[cipherlst[i+1]] >> 4
+            first = EnglishSet64.mapping_index(mapping, cipherlst[i]) << 2 |\
+                    EnglishSet64.mapping_index(mapping, cipherlst[i+1]) >> 4
             plaintxt.append(first)
 
             # Second
             if i+2 >= cipher_len: # Reached end
                 break
-            second = (reverse_mapping[cipherlst[i+1]] & 0x0F) << 4 |\
-                     reverse_mapping[cipherlst[i+2]] >> 2
+            second = (EnglishSet64.mapping_index(mapping, cipherlst[i+1]) & 0x0F) << 4 |\
+                      EnglishSet64.mapping_index(mapping, cipherlst[i+2]) >> 2
             plaintxt.append(second)
 
             # Third
             if i+3 >= cipher_len: # Reached end
                 break
-            third = (reverse_mapping[cipherlst[i+2]] & 0x03) << 6 |\
-                    reverse_mapping[cipherlst[i+3]]
+            third = (EnglishSet64.mapping_index(mapping, cipherlst[i+2]) & 0x03) << 6 |\
+                     EnglishSet64.mapping_index(mapping, cipherlst[i+3])
             plaintxt.append(third)
 
         plaintxt = bytes(plaintxt)
@@ -110,10 +116,10 @@ if __name__ == "__main__":
 
     print('-'*90)
 
-    #print("Test decode")
-    #print(English64.decode("they one in said"))
-    #print(English64.decode("they one a"))
-    #print(English64.decode("they as"))
-    #print(English64.decode("they one in said you is other do you is I when by will I when had were not time or have on there from one as your you is about an not to of an had were she about you is that about you is some when by which of which from one in do had if way your you is that time not to of we word his of their or is other do you it on when had were not time had is in which you it of some by will on when had if way what from all that an had his of an not is some other by we of some had were other how this one she do was to of will or is other can or to of when by which of some you is she time by will as what had if this what not is some other you is time when had were as your you it I there this have as what this all out what this his of each from have that do from have from other by were in said this if be what had if this what from is at your or one not there not to of when had we of their or is be what this if write said not is other said not one at out you is in said from to of when had were I other from were in their or one not some this were she other you is not other had were at which this have I when had if way what had if this what or if about an not if she other from is not other was to of other word is on other from one I do you it I there from his of do or is write which not to of if from one some other had one at said this if be what had if this what this one about about you is on some by were about some had to of each had is at some by will at which from his way"))
+    print("Test decode")
+    print(EnglishSet64.decode("they one in said"))
+    print(EnglishSet64.decode("they one a"))
+    print(EnglishSet64.decode("they as"))
+    print(EnglishSet64.decode("they one in said you is other do you is I when by will I when had were not time or have on there from one as your you is about an not to of an had were she about you is that about you is some when by which of which from one in do had if way your you is that time not to of we word his of their or is other do you it on when had were not time had is in which you it of some by will on when had if way what from all that an had his of an not is some other by we of some had were other how this one she do was to of will or is other can or to of when by which of some you is she time by will as what had if this what not is some other you is time when had were as your you it I there this have as what this all out what this his of each from have that do from have from other by were in said this if be what had if this what from is at your or one not there not to of when had we of their or is be what this if write said not is other said not one at out you is in said from to of when had were I other from were in their or one not some this were she other you is not other had were at which this have I when had if way what had if this what or if about an not if she other from is not other was to of other word is on other from one I do you it I there from his of do or is write which not to of if from one some other had one at said this if be what had if this what this one about about you is on some by were about some had to of each had is at some by will at which from his way"))
 
     #print('-'*90)
